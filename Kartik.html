@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- SEO Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Play Flappy Bird online! Free browser-based version of the classic mobile game. Test your skills and beat your high score.">
+    <meta name="keywords" content="flappy bird, online game, free game, browser game, classic game">
+    <meta name="author" content="Game Studio">
+    <meta property="og:title" content="Play Flappy Bird Online | Free Browser Game">
+    <meta property="og:description" content="Free online Flappy Bird game. Challenge yourself and beat your high score!">
+    <meta property="og:image" content="https://example.com/flappy-thumbnail.jpg">
+    
+    <title>Play Flappy Bird Online - Free Browser Game</title>
+    
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_AD_CLIENT_ID" crossorigin="anonymous"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #4EC0CA;
+            --accent-color: #FFD700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            touch-action: manipulation;
+        }
+
+        .header {
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 2/3;
+            border: 3px solid var(--accent-color);
+            border-radius: 10px;
+            background: var(--secondary-color);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        #scoreDisplay {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 1;
+        }
+
+        #gameOver {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 300px;
+            backdrop-filter: blur(5px);
+        }
+
+        .ad-container {
+            width: 100%;
+            max-width: 728px;
+            margin: 1rem auto;
+            padding: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .ad-label {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-color);
+            color: var(--primary-color);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .game-instructions {
+            color: white;
+            max-width: 600px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        #cookie-consent {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                max-width: 90%;
+            }
+            
+            #gameOver {
+                padding: 1rem;
+                width: 90%;
+            }
+            
+            .ad-container {
+                max-width: 320px;
+                min-height: 50px;
+            }
+            
+            #scoreDisplay {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Flappy Bird Online</h1>
+    </div>
+
+    <!-- Top Ad -->
+    <div class="ad-container">
+        <div class="ad-label">ADVERTISEMENT</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-YOUR_AD_CLIENT_ID"
+             data-ad-slot="YOUR_TOP_AD_SLOT_ID"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <div class="game-container">
+        <div id="scoreDisplay">0</div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="gameOver">
+            <h2>Game Over!</h2>
+            <p>Your Score: <span id="finalScore">0</span></p>
+            <button onclick="startGame()">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Bottom Ad -->
+    <div class="ad-container">
+        <div class="ad-label">ADVERTISEMENT</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-YOUR_AD_CLIENT_ID"
+             data-ad-slot="YOUR_BOTTOM_AD_SLOT_ID"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <section class="game-instructions">
+        <h2>How to Play</h2>
+        <p>Tap or press SPACE to flap your wings! Navigate through the pipes and avoid collisions. Each successful pass through a pipe earns you 1 point!</p>
+    </section>
+
+    <div id="cookie-consent">
+        <span>We use cookies to personalize content and ads.</span>
+        <button onclick="acceptCookies()">Accept</button>
+    </div>
+
+    <script>
+        // Game Configuration
+        const config = {
+            gravity: 0.5,
+            jumpForce: -8,
+            gameSpeed: 2,
+            pipeGap: 150,
+            pipeWidth: 50,
+            birdSize: 20
+        };
+
+        // Game Elements
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let aspectRatio = 2/3;
+        
+        // Set canvas size while maintaining aspect ratio
+        function resizeCanvas() {
+            const containerWidth = document.querySelector('.game-container').offsetWidth;
+            canvas.width = containerWidth;
+            canvas.height = containerWidth * aspectRatio;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Game State
+        let bird = {
+            x: canvas.width * 0.2,
+            y: canvas.height/2,
+            velocity: 0
+        };
+
+        let pipes = [];
+        let score = 0;
+        let gameLoop;
+        let isGameActive = false;
+
+        function drawBird() {
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(bird.x, bird.y, config.birdSize, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawPipes() {
+            ctx.fillStyle = '#2ecc71';
+            pipes.forEach(pipe => {
+                ctx.fillRect(pipe.x, 0, config.pipeWidth, pipe.top);
+                ctx.fillRect(pipe.x, pipe.top + config.pipeGap, 
+                           config.pipeWidth, canvas.height - (pipe.top + config.pipeGap));
+            });
+        }
+
+        function updateGame() {
+            if(!isGameActive) return;
+
+            // Bird physics
+            bird.velocity += config.gravity;
+            bird.y += bird.velocity;
+
+            // Pipe generation
+            if(pipes.length === 0 || pipes[pipes.length-1].x < canvas.width - 200) {
+                const minHeight = 50;
+                const maxHeight = canvas.height - config.pipeGap - minHeight;
+                const topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
+                
+                pipes.push({
+                    x: canvas.width,
+                    top: topHeight,
+                    passed: false
+                });
+            }
+
+            // Update pipes
+            pipes.forEach(pipe => {
+                pipe.x -= config.gameSpeed;
+
+                // Score update
+                if(!pipe.passed && pipe.x + config.pipeWidth < bird.x) {
+                    score++;
+                    document.getElementById('scoreDisplay').textContent = score;
+                    pipe.passed = true;
+                }
+
+                // Collision detection
+                if(bird.x + config.birdSize > pipe.x && 
+                   bird.x - config.birdSize < pipe.x + config.pipeWidth && 
+                   (bird.y - config.birdSize < pipe.top || 
+                    bird.y + config.birdSize > pipe.top + config.pipeGap)) {
+                    gameOver();
+                }
+            });
+
+            // Cleanup pipes
+            pipes = pipes.filter(pipe => pipe.x > -config.pipeWidth);
+
+            // Boundary check
+            if(bird.y + config.birdSize > canvas.height || bird.y - config.birdSize < 0) {
+                gameOver();
+            }
+        }
+
+        function gameOver() {
+            isGameActive = false;
+            cancelAnimationFrame(gameLoop);
+            document.getElementById('gameOver').style.display = 'block';
+            document.getElementById('finalScore').textContent = score;
+        }
+
+        function startGame() {
+            // Reset game state
+            bird.y = canvas.height/2;
+            bird.velocity = 0;
+            pipes = [];
+            score = 0;
+            isGameActive = true;
+            document.getElementById('scoreDisplay').textContent = '0';
+            document.getElementById('gameOver').style.display = 'none';
+            
+            // Start game loop
+            gameLoop = requestAnimationFrame(gameUpdate);
+        }
+
+        function gameUpdate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updateGame();
+            drawPipes();
+            drawBird();
+            gameLoop = requestAnimationFrame(gameUpdate);
+        }
+
+        // Event Listeners
+        document.addEventListener('keydown', (e) => {
+            if(e.code === 'Space') {
+                if(!isGameActive) startGame();
+                bird.velocity = config.jumpForce;
+            }
+        });
+
+        canvas.addEventListener('click', () => {
+            if(!isGameActive) startGame();
+            bird.velocity = config.jumpForce;
+        });
+
+        // Initialize ads
+        document.addEventListener('DOMContentLoaded', () => {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        });
+
+        // Cookie Consent
+        function acceptCookies() {
+            document.getElementById('cookie-consent').style.display = 'none';
+            localStorage.setItem('cookiesAccepted', 'true');
+        }
+
+        if(localStorage.getItem('cookiesAccepted')) {
+            document.getElementById('cookie-consent').style.display = 'none';
+        }
+
+        // Initial game start
+        startGame();
+    </script>
+</body>
+</html>
